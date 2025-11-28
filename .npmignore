@@ -1,0 +1,11 @@
+src/
+tests/
+docs/
+*.ts
+!*.d.ts
+.git
+.gitignore
+rollup.config.js
+tsconfig.json
+jest.config.js
+
