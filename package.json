@@ -49,12 +49,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/oszoom.git"
+    "url": "https://github.com/kriparajp1/oszoom.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/oszoom/issues"
+    "url": "https://github.com/kriparajp1/oszoom.git/issues"
   },
-  "homepage": "https://github.com/yourusername/oszoom#readme",
+  "homepage": "https://github.com/kriparajp1/oszoom.git/readme",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
