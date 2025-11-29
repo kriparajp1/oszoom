@@ -1017,12 +1017,10 @@ MIT License - Feel free to use in personal and commercial projects.
 
 For issues, feature requests, or contributions:
 
-- GitHub: https://github.com/yourusername/oszoom
+- GitHub: https://github.com/kriparajp1/oszoom
 - NPM: https://www.npmjs.com/package/oszoom
 
 ---
 
-**Created for Synx Automation Pvt Ltd**  
-**WhatsApp Marketing Automation Platform**
 
 # oszoom
