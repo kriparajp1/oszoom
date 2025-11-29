@@ -1,6 +1,6 @@
 {
   "name": "oszoom",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "Universal OS-specific zoom controller for all frameworks and vanilla HTML",
   "keywords": [
     "zoom",
@@ -19,6 +19,7 @@
   ],
   "author": "Kriparaj.p <kripa@synxzautomate.com>",
   "license": "MIT",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.esm.js",
@@ -29,9 +30,9 @@
       "types": "./dist/index.d.ts"
     },
     "./react": {
-      "require": "./dist/adapters/ReactAdapter.js",
-      "import": "./dist/adapters/ReactAdapter.esm.js",
-      "types": "./dist/adapters/ReactAdapter.d.ts"
+      "require": "./dist/react.js",
+      "import": "./dist/react.esm.js",
+      "types": "./dist/react.d.ts"
     },
     "./vue": {
       "require": "./dist/adapters/VueAdapter.js",
@@ -49,12 +50,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kriparajp1/oszoom.git"
+    "url": "git+https://github.com/kriparajp1/oszoom.git"
   },
   "bugs": {
-    "url": "https://github.com/kriparajp1/oszoom.git/issues"
+    "url": "https://github.com/kriparajp1/oszoom/issues"
   },
-  "homepage": "https://github.com/kriparajp1/oszoom.git/readme",
+  "homepage": "https://github.com/kriparajp1/oszoom#readme",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -68,7 +69,7 @@
     "@types/node": "^20.0.0",
     "jest": "^29.0.0",
     "rollup": "^4.0.0",
-    "rollup-plugin-terser": "^7.0.2",
+    "@rollup/plugin-terser": "^0.4.4",
     "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.0.0",
     "typescript": "^5.0.0"

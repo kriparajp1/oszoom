@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Zoom Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>OS Zoom Test</h1>
+    
+    <div class="info">
+        <p><strong>Detected OS:</strong> <span id="os-name">Detecting...</span></p>
+        <p><strong>Current Zoom:</strong> <span id="zoom-level">100%</span></p>
+        <p><strong>Status:</strong> <span id="status">Initializing...</span></p>
+    </div>
+    
+    <div>
+        <button onclick="testZoom()">Test Zoom</button>
+        <button onclick="resetZoom()">Reset Zoom</button>
+    </div>
+
+    <!-- Use local build for testing -->
+    <script src="./dist/index.js"></script>
+    <script>
+        let zoomInstance = null;
+        
+        // Wait for script to load
+        window.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Try different ways to access OSZoom
+                const OSZoomClass = window.OSZoom?.default || window.OSZoom?.OSZoom || window.OSZoom;
+                
+                if (!OSZoomClass) {
+                    document.getElementById('status').textContent = 'ERROR: OSZoom not found!';
+                    console.error('OSZoom not found. Available:', Object.keys(window));
+                    return;
+                }
+                
+                console.log('OSZoom class found:', OSZoomClass);
+                
+                // Initialize with debug enabled
+                zoomInstance = new OSZoomClass({
+                    windows: { enabled: true, zoomLevel: 0.8 },
+                    macos: { enabled: true, zoomLevel: 0.5 },
+                    linux: { enabled: true, zoomLevel: 0.9 },
+                    android: { enabled: false, zoomLevel: 1 },
+                    ios: { enabled: false, zoomLevel: 1 },
+                    debug: true
+                });
+                
+                // Update UI
+                const osInfo = zoomInstance.getOSInfo();
+                const state = zoomInstance.getState();
+                
+                document.getElementById('os-name').textContent = osInfo.os.toUpperCase();
+                document.getElementById('zoom-level').textContent = (state.currentZoom * 100).toFixed(0) + '%';
+                document.getElementById('status').textContent = 'Zoom applied successfully!';
+                
+                console.log('OS Info:', osInfo);
+                console.log('Zoom State:', state);
+            } catch (error) {
+                document.getElementById('status').textContent = 'ERROR: ' + error.message;
+                console.error('Error initializing OSZoom:', error);
+            }
+        });
+        
+        function testZoom() {
+            if (zoomInstance) {
+                zoomInstance.setZoom('windows', 0.75);
+                const state = zoomInstance.getState();
+                document.getElementById('zoom-level').textContent = (state.currentZoom * 100).toFixed(0) + '%';
+            }
+        }
+        
+        function resetZoom() {
+            if (zoomInstance) {
+                zoomInstance.reset();
+                const state = zoomInstance.getState();
+                document.getElementById('zoom-level').textContent = (state.currentZoom * 100).toFixed(0) + '%';
+            }
+        }
+    </script>
+</body>
+</html>
+

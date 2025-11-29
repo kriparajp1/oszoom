@@ -14,34 +14,17 @@ export class CSSVariables {
   /**
    * Set scale factor CSS variable
    * @param {number} factor - Scale factor (0.5-2.0)
+   * 
+   * This is the most flexible approach - only sets the scale factor,
+   * and CSS calc() handles all the calculations automatically.
+   * This maintains clean responsive behavior and avoids whitespace issues.
    */
   setScaleFactor(factor: number): void {
     const root = document.documentElement;
 
-    // Set primary scale factor
+    // Only set the scale factor - CSS calc() handles the rest
+    // This is the most flexible and maintainable approach
     root.style.setProperty(CSSVariables.CSS_VARIABLES.scaleFactor, factor.toString());
-
-    // Set calculated values
-    root.style.setProperty(
-      CSSVariables.CSS_VARIABLES.baseFontSize,
-      `calc(16px * ${factor})`
-    );
-    root.style.setProperty(
-      CSSVariables.CSS_VARIABLES.headingSize,
-      `calc(32px * ${factor})`
-    );
-    root.style.setProperty(
-      CSSVariables.CSS_VARIABLES.spacingUnit,
-      `calc(20px * ${factor})`
-    );
-    root.style.setProperty(
-      CSSVariables.CSS_VARIABLES.lineHeight,
-      `calc(1.6 * ${factor})`
-    );
-    root.style.setProperty(
-      CSSVariables.CSS_VARIABLES.borderRadius,
-      `calc(8px * ${factor})`
-    );
   }
 
   /**
@@ -55,18 +38,19 @@ export class CSSVariables {
     const style = document.createElement('style');
     style.id = 'oszoom-styles';
     style.textContent = `
-      :root {
-        ${CSSVariables.CSS_VARIABLES.scaleFactor}: 1;
-        ${CSSVariables.CSS_VARIABLES.baseFontSize}: calc(16px * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
-        ${CSSVariables.CSS_VARIABLES.headingSize}: calc(32px * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
-        ${CSSVariables.CSS_VARIABLES.spacingUnit}: calc(20px * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
-        ${CSSVariables.CSS_VARIABLES.lineHeight}: calc(1.6 * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
-        ${CSSVariables.CSS_VARIABLES.borderRadius}: calc(8px * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
-      }
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+      :root {
+        /* Scaling variable - adjust this to change overall size */
+        ${CSSVariables.CSS_VARIABLES.scaleFactor}: 1;
+        
+        /* Base font size (scales based on factor) */
+        ${CSSVariables.CSS_VARIABLES.baseFontSize}: calc(16px * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
+        ${CSSVariables.CSS_VARIABLES.headingSize}: calc(32px * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
+        ${CSSVariables.CSS_VARIABLES.spacingUnit}: calc(20px * var(${CSSVariables.CSS_VARIABLES.scaleFactor}));
       }
       html {
         font-size: var(${CSSVariables.CSS_VARIABLES.baseFontSize});
@@ -79,11 +63,9 @@ export class CSSVariables {
         margin-bottom: calc(var(${CSSVariables.CSS_VARIABLES.spacingUnit}) * 0.75);
       }
       p {
-        line-height: var(${CSSVariables.CSS_VARIABLES.lineHeight});
+        font-size: var(${CSSVariables.CSS_VARIABLES.baseFontSize});
+        line-height: 1.6;
         margin-bottom: calc(var(${CSSVariables.CSS_VARIABLES.spacingUnit}) * 0.5);
-      }
-      button, input, select, textarea {
-        border-radius: var(${CSSVariables.CSS_VARIABLES.borderRadius});
       }
     `;
 

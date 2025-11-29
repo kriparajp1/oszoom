@@ -54,19 +54,13 @@ export class ZoomManager {
   }
 
   /**
-   * Apply JavaScript-based zoom
+   * Apply JavaScript-based zoom (using CSS variables only)
    * @private
    */
   private applyJavaScriptZoom(zoomLevel: number): void {
-    const html = document.documentElement;
-    // Standard CSS zoom
-    (html as any).style.zoom = zoomLevel;
-
-    // Firefox fallback
-    if (this.isFirefox()) {
-      html.style.transform = `scale(${zoomLevel})`;
-      html.style.transformOrigin = '0 0';
-    }
+    // CSS variables approach - no need for zoom or transform
+    // The CSS variables handle all scaling through calc()
+    // This is more flexible and maintainable
   }
 
   /**
@@ -101,9 +95,7 @@ export class ZoomManager {
     this.state.currentZoom = 1;
     this.state.isActive = false;
 
-    const html = document.documentElement;
-    (html as any).style.zoom = 1;
-    html.style.transform = 'scale(1)';
+    // Reset CSS variable to 1 (100%)
     this.cssVariables.setScaleFactor(1);
 
     this.log('Zoom reset to 100%');

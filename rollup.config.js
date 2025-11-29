@@ -1,21 +1,24 @@
 import typescript from 'rollup-plugin-typescript2';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
+import typescriptLib from 'typescript';
 
 export default [
-  // UMD build for browsers
+  // UMD build for browsers (vanilla only, no framework dependencies)
   {
-    input: 'src/index.ts',
+    input: 'src/vanilla.ts',
     output: {
       file: 'dist/index.js',
       format: 'umd',
       name: 'OSZoom',
-      sourcemap: true
+      sourcemap: true,
+      exports: 'default' // Use default export as main export for UMD
     },
     plugins: [
       typescript({
-        typescript: require('typescript'),
+        typescript: typescriptLib,
         tsconfig: './tsconfig.json',
-        exclude: ['node_modules', '**/*.test.ts']
+        exclude: ['node_modules', '**/*.test.ts'],
+        check: false // Skip type checking during build (use 'npm run lint' for type checking)
       }),
       terser()
     ]
@@ -30,13 +33,14 @@ export default [
     },
     plugins: [
       typescript({
-        typescript: require('typescript'),
+        typescript: typescriptLib,
         tsconfig: './tsconfig.json',
-        exclude: ['node_modules', '**/*.test.ts']
+        exclude: ['node_modules', '**/*.test.ts'],
+        check: false // Skip type checking during build (use 'npm run lint' for type checking)
       })
     ]
   },
-  // React adapter
+  // React adapter (direct)
   {
     input: 'src/adapters/ReactAdapter.ts',
     external: ['react'],
@@ -54,8 +58,33 @@ export default [
     ],
     plugins: [
       typescript({
-        typescript: require('typescript'),
-        tsconfig: './tsconfig.json'
+        typescript: typescriptLib,
+        tsconfig: './tsconfig.json',
+        check: false // Skip type checking during build (use 'npm run lint' for type checking)
+      })
+    ]
+  },
+  // React entry point (with useOSZoomReact export name)
+  {
+    input: 'src/react.ts',
+    external: ['react'],
+    output: [
+      {
+        file: 'dist/react.js',
+        format: 'cjs',
+        sourcemap: true
+      },
+      {
+        file: 'dist/react.esm.js',
+        format: 'es',
+        sourcemap: true
+      }
+    ],
+    plugins: [
+      typescript({
+        typescript: typescriptLib,
+        tsconfig: './tsconfig.json',
+        check: false
       })
     ]
   },
@@ -77,8 +106,9 @@ export default [
     ],
     plugins: [
       typescript({
-        typescript: require('typescript'),
-        tsconfig: './tsconfig.json'
+        typescript: typescriptLib,
+        tsconfig: './tsconfig.json',
+        check: false // Skip type checking during build (use 'npm run lint' for type checking)
       })
     ]
   },
@@ -100,8 +130,9 @@ export default [
     ],
     plugins: [
       typescript({
-        typescript: require('typescript'),
-        tsconfig: './tsconfig.json'
+        typescript: typescriptLib,
+        tsconfig: './tsconfig.json',
+        check: false // Skip type checking during build (use 'npm run lint' for type checking)
       })
     ]
   }

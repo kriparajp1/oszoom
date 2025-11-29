@@ -87,27 +87,43 @@ pnpm add oszoom
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://unpkg.com/oszoom"></script>
+    <script src="https://unpkg.com/oszoom@latest/dist/index.js"></script>
 </head>
 <body>
     <h1>OS Zoom Demo</h1>
     <p>Zoom is automatically applied based on your OS!</p>
     <script>
-        // Different zoom levels for different OS
-        // Windows users will see 80% zoom (0.8)
-        // macOS users will see 50% zoom (0.5)
-        // Linux users will see 90% zoom (0.9)
-        const zoom = new OSZoom({
-            windows: { enabled: true, zoomLevel: 0.8 },  // 80% zoom for Windows
-            macos: { enabled: true, zoomLevel: 0.5 },    // 50% zoom for macOS
-            linux: { enabled: true, zoomLevel: 0.9 },    // 90% zoom for Linux
-            android: { enabled: false, zoomLevel: 1 },    // No zoom for Android
-            ios: { enabled: false, zoomLevel: 1 }         // No zoom for iOS
+        // Wait for script to load, then access OSZoom
+        window.addEventListener('DOMContentLoaded', function() {
+            // Access OSZoom class (try different ways for compatibility)
+            const OSZoomClass = window.OSZoom?.default || window.OSZoom?.OSZoom || window.OSZoom;
+            
+            if (!OSZoomClass) {
+                console.error('OSZoom not found!');
+                return;
+            }
+            
+            // Different zoom levels for different OS
+            // Windows users will see 80% zoom (0.8)
+            // macOS users will see 50% zoom (0.5)
+            // Linux users will see 90% zoom (0.9)
+            const zoom = new OSZoomClass({
+                windows: { enabled: true, zoomLevel: 0.8 },  // 80% zoom for Windows
+                macos: { enabled: true, zoomLevel: 0.5 },    // 50% zoom for macOS
+                linux: { enabled: true, zoomLevel: 0.9 },    // 90% zoom for Linux
+                android: { enabled: false, zoomLevel: 1 },   // No zoom for Android
+                ios: { enabled: false, zoomLevel: 1 },       // No zoom for iOS
+                debug: true  // Enable debug to see what's happening
+            });
+            
+            // Check what was applied automatically
+            const osInfo = zoom.getOSInfo();
+            const state = zoom.getState();
+            
+            console.log('OS:', osInfo.os);
+            console.log('Zoom:', state.currentZoom);
+            console.log('Browser:', osInfo.browser);
         });
-        
-        // Check what was applied automatically
-        console.log('OS:', zoom.getOSInfo().os);
-        console.log('Zoom:', zoom.getState().currentZoom);
     </script>
 </body>
 </html>
@@ -116,7 +132,7 @@ pnpm add oszoom
 ### React
 
 ```jsx
-import { useOSZoomReact } from 'oszoom';
+import { useOSZoomReact } from 'oszoom/react';
 
 function App() {
   // Different zoom levels for different OS
@@ -369,7 +385,7 @@ The package automatically detects the user's OS and applies the configured zoom 
 
 ```jsx
 import React from 'react';
-import { useOSZoomReact } from 'oszoom';
+import { useOSZoomReact } from 'oszoom/react';
 
 function App() {
   // Different zoom levels for different OS
@@ -539,7 +555,7 @@ export class AppComponent implements OnInit {
 
 ```jsx
 import React from 'react';
-import { useOSZoomReact, ConfigManager } from 'oszoom';
+import { useOSZoomReact, ConfigManager } from 'oszoom/react';
 
 function OSZoomApp() {
   const { state, osInfo, setZoom, reset } = useOSZoomReact(
@@ -650,7 +666,7 @@ export class OSZoomComponent implements OnInit {
 ```jsx
 'use client';
 
-import { useOSZoomReact, ConfigManager } from 'oszoom';
+import { useOSZoomReact, ConfigManager } from 'oszoom/react';
 import { useEffect, useState } from 'react';
 
 export default function Page() {
