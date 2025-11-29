@@ -694,6 +694,148 @@ export default function Page() {
 }
 ```
 
+### Using Separate Config Components (Recommended for Next.js & React)
+
+**Best Practice:** Create a separate component for OSZoom configuration to keep your layout/components clean and maintainable.
+
+#### React - Separate Config Component
+
+```jsx
+// components/OSZoomProvider.tsx
+'use client';
+
+import { useOSZoomReact, ConfigManager } from 'oszoom/react';
+
+/**
+ * OSZoom Provider Component
+ * Handles OS-specific zoom configuration
+ * Add this component to your root layout or App component
+ */
+export function OSZoomProvider() {
+  useOSZoomReact({
+    windows: { enabled: true, zoomLevel: 0.8 },
+    macos: { enabled: true, zoomLevel: 0.5 },
+    linux: { enabled: true, zoomLevel: 0.9 },
+    android: { enabled: false, zoomLevel: 1 },
+    ios: { enabled: false, zoomLevel: 1 },
+    debug: false
+  });
+
+  // This component doesn't render anything
+  return null;
+}
+```
+
+**Usage in your App:**
+
+```jsx
+// App.jsx or _app.jsx
+import { OSZoomProvider } from '@/components/OSZoomProvider';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      <OSZoomProvider />
+      <Component {...pageProps} />
+    </>
+  );
+}
+
+export default MyApp;
+```
+
+#### Next.js - Separate Config Component
+
+```jsx
+// components/OSZoomClient.tsx
+'use client';
+
+import { useOSZoomReact, ConfigManager } from 'oszoom/react';
+
+/**
+ * OSZoom Client Component for Next.js
+ * Handles OS-specific zoom configuration
+ * Add this to your root layout.tsx
+ */
+export function OSZoomClient() {
+  useOSZoomReact({
+    windows: { enabled: true, zoomLevel: 0.8 },
+    macos: { enabled: true, zoomLevel: 0.5 },
+    linux: { enabled: true, zoomLevel: 0.9 },
+    android: { enabled: false, zoomLevel: 1 },
+    ios: { enabled: false, zoomLevel: 1 },
+    debug: false
+  });
+
+  // This component doesn't render anything
+  return null;
+}
+```
+
+**Usage in your Layout:**
+
+```jsx
+// app/layout.tsx
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { OSZoomClient } from '@/components/OSZoomClient';
+import { ThemeProvider } from '@/components/theme-provider';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'My App',
+  description: 'My app description',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <OSZoomClient />
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+#### Using Presets in Config Component
+
+```jsx
+// components/OSZoomClient.tsx
+'use client';
+
+import { useOSZoomReact, ConfigManager } from 'oszoom/react';
+
+export function OSZoomClient() {
+  // Use preset configuration
+  useOSZoomReact(ConfigManager.presets.desktopOnly());
+  
+  // Or use custom configuration
+  // useOSZoomReact({
+  //   windows: { enabled: true, zoomLevel: 0.8 },
+  //   macos: { enabled: true, zoomLevel: 0.5 },
+  // });
+
+  return null;
+}
+```
+
+#### Benefits of Separate Config Components
+
+✅ **Clean Separation** - Keeps zoom logic separate from your main components  
+✅ **Reusable** - Use the same component across different layouts  
+✅ **Maintainable** - Easy to update zoom configuration in one place  
+✅ **Type-Safe** - Full TypeScript support  
+✅ **No Side Effects** - Component returns `null`, doesn't affect layout  
+
 ---
 
 ## API Reference
