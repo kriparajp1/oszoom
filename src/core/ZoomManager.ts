@@ -123,14 +123,6 @@ export class ZoomManager {
   }
 
   /**
-   * Check if Firefox
-   * @private
-   */
-  private isFirefox(): boolean {
-    return navigator.userAgent.toLowerCase().includes('firefox');
-  }
-
-  /**
    * Logging utility
    * @private
    */

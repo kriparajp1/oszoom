@@ -17,11 +17,24 @@ export function useOSZoom(config?: ZoomControllerConfig) {
     isActive: false
   });
 
-  const [osInfo] = useState<OSDetectionResult>(OSDetector.detect());
+  const [osInfo, setOsInfo] = useState<OSDetectionResult>({
+    os: 'unknown',
+    isMobile: false,
+    browser: undefined
+  });
   const zoomManagerRef = useRef<ZoomManager | null>(null);
   const cssVariablesRef = useRef<CSSVariables | null>(null);
 
   useEffect(() => {
+    // Only run on client side (SSR-safe)
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    // Detect OS on client side only
+    const detectedOSInfo = OSDetector.detect();
+    setOsInfo(detectedOSInfo);
+
     // Initialize managers
     zoomManagerRef.current = new ZoomManager(ConfigManager.mergeConfig(config));
     cssVariablesRef.current = new CSSVariables();
@@ -29,13 +42,13 @@ export function useOSZoom(config?: ZoomControllerConfig) {
     // Inject CSS
     cssVariablesRef.current.injectCSS();
 
-    // Detect OS and apply zoom
-    const detectedOS = osInfo.os;
+    // Apply zoom based on detected OS
+    const detectedOS = detectedOSInfo.os;
     zoomManagerRef.current.apply(detectedOS as OS);
     setState(zoomManagerRef.current.getState());
 
     if (config?.debug) {
-      console.log('[useOSZoom] Initialized:', osInfo);
+      console.log('[useOSZoom] Initialized:', detectedOSInfo);
     }
 
     return () => {

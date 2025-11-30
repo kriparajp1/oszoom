@@ -17,14 +17,22 @@ export function useOSZoom(config?: ZoomControllerConfig) {
     isActive: false
   });
 
-  const osInfo: Ref<OSDetectionResult> = ref(OSDetector.detect());
+  const osInfo: Ref<OSDetectionResult> = ref({
+    os: 'unknown',
+    isMobile: false,
+    browser: undefined
+  });
   let zoomManager: ZoomManager | null = null;
   const cssVariables = new CSSVariables();
 
   onMounted(() => {
+    // Detect OS on client side only (SSR-safe)
+    const detectedOSInfo = OSDetector.detect();
+    osInfo.value = detectedOSInfo;
+    
     zoomManager = new ZoomManager(ConfigManager.mergeConfig(config));
     cssVariables.injectCSS();
-    zoomManager.apply(osInfo.value.os as OS);
+    zoomManager.apply(detectedOSInfo.os as OS);
     state.value = zoomManager.getState();
 
     if (config?.debug) {

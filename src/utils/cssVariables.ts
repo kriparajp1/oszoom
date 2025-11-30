@@ -20,6 +20,11 @@ export class CSSVariables {
    * This maintains clean responsive behavior and avoids whitespace issues.
    */
   setScaleFactor(factor: number): void {
+    // SSR-safe: check if document exists
+    if (typeof document === 'undefined') {
+      return;
+    }
+    
     const root = document.documentElement;
 
     // Only set the scale factor - CSS calc() handles the rest
@@ -31,6 +36,11 @@ export class CSSVariables {
    * Inject CSS variables into document
    */
   injectCSS(): void {
+    // SSR-safe: check if document exists
+    if (typeof document === 'undefined') {
+      return;
+    }
+    
     if (document.getElementById('oszoom-styles')) {
       return; // Already injected
     }
@@ -76,6 +86,11 @@ export class CSSVariables {
    * Remove injected CSS
    */
   removeCSS(): void {
+    // SSR-safe: check if document exists
+    if (typeof document === 'undefined') {
+      return;
+    }
+    
     const style = document.getElementById('oszoom-styles');
     if (style) {
       style.remove();
@@ -88,6 +103,11 @@ export class CSSVariables {
    * @returns {string} - Variable value
    */
   getVariable(variableName: string): string {
+    // SSR-safe: check if document exists
+    if (typeof document === 'undefined' || typeof window === 'undefined') {
+      return '';
+    }
+    
     return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
   }
 }

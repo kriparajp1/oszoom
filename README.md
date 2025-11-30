@@ -26,6 +26,17 @@ A universal, framework-agnostic npm package for applying OS-specific zoom levels
 - Accessibility improvements
 - Custom viewing experiences per OS
 
+### 🔒 Privacy-First OS Detection
+
+**Important:** This package uses **feature detection** instead of user agent parsing to identify the operating system. This approach:
+
+- ✅ **Avoids User Agent Diffing** - Modern browsers and privacy tools often randomize or modify user agent strings to prevent fingerprinting. Feature detection bypasses this issue entirely.
+- ✅ **More Reliable** - Uses browser capabilities, APIs, and platform features rather than parsing unreliable user agent strings.
+- ✅ **Privacy-Friendly** - Doesn't rely on user agent strings that can be used for tracking.
+- ✅ **Future-Proof** - Works even when browsers change or hide user agent information.
+
+The detection uses browser APIs (like `navigator.platform`, CSS feature support, touch capabilities, and browser-specific APIs) to determine the OS, making it resistant to user agent spoofing and privacy tools.
+
 **Supported Operating Systems:**
 - Windows (all versions: 7, 8, 8.1, 10, 11)
 - macOS (all versions)
@@ -45,6 +56,7 @@ A universal, framework-agnostic npm package for applying OS-specific zoom levels
 ## Features
 
 ✅ **Multi-OS Support** - Automatic detection and OS-specific zoom configuration  
+✅ **Feature-Based Detection** - Uses browser capabilities and APIs instead of user agent parsing (avoids user agent diffing issues)  
 ✅ **Framework Agnostic** - Works with React, Vue, Angular, Next.js, and vanilla JavaScript  
 ✅ **Dynamic Zoom Control** - Update zoom levels on-the-fly at runtime  
 ✅ **CSS Variables System** - Easy customization through CSS custom properties  
@@ -53,7 +65,8 @@ A universal, framework-agnostic npm package for applying OS-specific zoom levels
 ✅ **Zero Dependencies** - Lightweight, no external dependencies  
 ✅ **Debug Mode** - Built-in debugging and logging  
 ✅ **Multiple Bundle Formats** - CommonJS, ESM, and UMD  
-✅ **Accessibility Friendly** - Respects user preferences and enables dynamic adjustment
+✅ **Accessibility Friendly** - Respects user preferences and enables dynamic adjustment  
+✅ **SSR-Safe** - Works with server-side rendering (Next.js, Nuxt, etc.)
 
 ---
 
@@ -844,13 +857,15 @@ export function OSZoomClient() {
 
 #### OSDetector
 
-Static utility class for detecting operating system information.
+Static utility class for detecting operating system information using **feature detection** (not user agent parsing).
+
+**Note:** This class uses browser capabilities, APIs, and platform features to detect the OS. It does **not** parse user agent strings, making it resistant to user agent diffing and privacy tools that randomize user agent information.
 
 **Methods:**
-- `detect(): OSDetectionResult` - Detect OS and return detailed information
+- `detect(): OSDetectionResult` - Detect OS and return detailed information using feature analysis
 - `isOS(targetOS: OS): boolean` - Check if specific OS is detected
 - `isMobile(): boolean` - Check if on mobile device
-- `getBrowser(): string | undefined` - Get detected browser name
+- `getBrowser(): string | undefined` - Get detected browser name (using feature detection)
 
 #### ZoomManager
 
@@ -995,6 +1010,26 @@ const zoom = new OSZoom({ debug: true });
 // Check OS detection
 const osInfo = zoom.getOSInfo();
 console.log('Detected OS:', osInfo);
+```
+
+### OS Detection Issues
+
+If OS detection is not working correctly:
+
+1. **Feature Detection Method**: This package uses feature detection (browser APIs, CSS support, touch capabilities) instead of user agent parsing. This makes it more reliable but may behave differently than user agent-based detection.
+
+2. **Check Detection Results**:
+```javascript
+const osInfo = OSDetector.detect();
+console.log('OS:', osInfo.os);
+console.log('Is Mobile:', osInfo.isMobile);
+console.log('Browser:', osInfo.browser);
+```
+
+3. **Manual Override**: If automatic detection fails, you can manually set zoom for specific OS:
+```javascript
+zoom.setZoom('windows', 0.8);
+zoom.setZoom('macos', 0.5);
 ```
 
 ### CSS Not Applying

@@ -1,6 +1,6 @@
 {
   "name": "oszoom",
-  "version": "1.0.9",
+  "version": "1.0.12",
   "description": "Universal OS-specific zoom controller for all frameworks and vanilla HTML",
   "keywords": [
     "zoom",

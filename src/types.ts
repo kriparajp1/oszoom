@@ -40,7 +40,6 @@ export interface OSDetectionResult {
   version?: string;
   isMobile: boolean;
   browser?: string;
-  userAgent: string;
 }
 
 /**
